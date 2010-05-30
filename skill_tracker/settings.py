@@ -78,6 +78,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'skill_tracker.urls'
 
 TEMPLATE_DIRS = (
+    '/home/elija/test/skill_set/skill_tracker/templates'
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

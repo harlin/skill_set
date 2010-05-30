@@ -1,0 +1,11 @@
+<h1>{{ subskill.name }}</h1>
+<p>{{ subskill.description }}</p>
+
+{% if subskill.homepage %}
+    <a href="{{ subskill.homepage }}">Homepage</p>
+{% endif %}
+{% if subskill.wiki_en_link %}
+    <a href="{{ subskill.wiki_en_link }}">Wikipedia(English)</p>
+{% endif %}
+<a href="/skills/{{ skill.id }}">Back to {{ skill.name }}</a>
+

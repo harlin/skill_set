@@ -8,7 +8,7 @@ class SubSkillInline(admin.StackedInline):
 class SkillAdmin(admin.ModelAdmin):
     fieldsets = [
         ('General Information', {'fields': ['name', 'description']}),
-        ('Links',               {'fields': ['homepage', 'wiki_en_link'], 'classes': ['collapse']}),
+        # ('Links',               {'fields': ['homepage', 'wiki_en_link'], 'classes': ['collapse']}),
     ]
     inlines = [SubSkillInline]
 

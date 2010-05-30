@@ -1,0 +1,9 @@
+<h1>{{ skill.name }}</h1>
+<p>{{ skill.description }}</p>
+
+<ul>
+{% for subskill in skill.subskill_set.all %}
+    <li><a href="/skills/{{ skill.id }}/{{ subskill.id }}">{{ subskill.name }}</a></li>
+{% endfor %}
+</ul>
+
