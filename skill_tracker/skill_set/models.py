@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Skill(models.Model):
     name = models.CharField(max_length=200)
@@ -21,3 +22,17 @@ class SubSkill(models.Model):
     def __unicode__(self):
         return self.name
 
+KNOWLEDGE_CHOICES = (
+    ('0', "Don't know at all"),
+    ('1', "Tried a few things"),
+    ('2', "Had a project"),
+    ('3', "Mastered"),
+)
+
+class SubSkillKnowledge(models.Model):
+    employee = models.ForeignKey(User)
+    subskill = models.ForeignKey(SubSkill)
+    # TODO: Here be a key to the User entity. don't know how to use that yet
+    knowledge_level = models.CharField(max_length=1, choices=KNOWLEDGE_CHOICES, default='0')
+    want = models.BooleanField(default=False)
+    comment = models.TextField()
