@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="/skills/my_skills/" method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Submit" />
+{% if skill_list %}
+    <ul>
+    {% for skill in skill_list %}
+        <li><a href="/skills/my_skills/{{ skill.id }}/">{{ skill.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No skills are available.</p>
+{% endif %}
 </form>
 
 

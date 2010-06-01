@@ -10,6 +10,7 @@ urlpatterns = patterns('skill_tracker.skill_set.views',
     (r'^(?P<skill_id>\d+)/$', 'skill_detail'),
     (r'^(?P<skill_id>\d+)/(?P<subskill_id>\d+)/$', 'subskill_detail'),
     (r'^my_skills/$', 'my_skills'),
+    (r'^my_skills/(?P<skill_id>\d+)/$', 'my_skill_input'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
