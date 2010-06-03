@@ -9,7 +9,10 @@
 
     <form action="/my_skills/{{ skill.id }}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ formset.management_form }}
+        {% for form in formset.forms %}
+            {{ form.as_p }}
+        {% endfor %}
     <input type="submit" value="Submit" />
 </form>
 
