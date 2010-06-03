@@ -1,5 +1,5 @@
 from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge
-
+from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory, inlineformset_factory
+
 
 def skill_index(request):
     skill_list = Skill.objects.all()
@@ -37,25 +38,26 @@ def my_skills(request):
 @login_required
 def my_skill_input(request, skill_id):
     s = get_object_or_404(Skill, pk=skill_id)
+    skill_list = Skill.objects.all()
+
+    # Create objects if they don't exist yet
     # TODO: This looks like a bit hardcode AND it violates MVC
+    #       but for now i don't know how (or where) to do it better
     for sub in s.subskill_set.all():
         SubSkillKnowledge.objects.get_or_create(
             employee=request.user, subskill=sub)
-    KnowledgeFormSet = modelformset_factory(SubSkillKnowledge, \
-        max_num=s.subskill_set.count())
+
+    # TODO: I should add a custom form argument here OR work on template
+    KnowledgeFormSet = inlineformset_factory(User, SubSkillKnowledge, \
+        extra=0, can_delete=False, fields=(
+            'subskill', 'knowledge_level', 'want', 'comment'))
     if request.method == 'POST':
-        from settings import DEBUG
-        if DEBUG:
-            postfile = open('postfile.txt', 'w')
-            print >> postfile, request.POST
-            postfile.close()
-        formset = KnowledgeFormSet(request.POST)
+        formset = KnowledgeFormSet(request.POST, instance=request.user)
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect('/skills/my_skills/')
     else:
-        formset = KnowledgeFormSet(queryset=SubSkillKnowledge.objects.filter(
-            employee=request.user))
+        formset = KnowledgeFormSet(instance=request.user)
     return render_to_response('skill_set/my_skill_input.html', \
-        {'skill': s, 'formset': formset}, \
+        {'skill': s, 'formset': formset, 'skill_list': skill_list}, \
             context_instance=RequestContext(request))
