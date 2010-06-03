@@ -3,11 +3,11 @@
 {% block content %}
     <ul>
     {% for skill in skill_list %}
-        <li><a href="/my_skills/{{ skill.id }}/">{{ skill.name }}</a></li>
+        <li><a href="/skills/my_skills/{{ skill.id }}/">{{ skill.name }}</a></li>
     {% endfor %}
     </ul>
 
-    <form action="/my_skills/{{ skill.id }}" method="post">
+    <form action="/skills/my_skills/{{ skill.id }}/" method="post">
         {% csrf_token %}
         {{ formset.management_form }}
         {% for form in formset.forms %}
