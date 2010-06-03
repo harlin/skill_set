@@ -9,7 +9,7 @@
 
     <form action="/skills/my_skills/{{ skill.id }}/" method="post">
         {% csrf_token %}
-        {% for subform in form_list %}
+        {% for subform in form_list.forms %}
             {{ subform.as_p }}
         {% endfor %}
     <input type="submit" value="Submit" />

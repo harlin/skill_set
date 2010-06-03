@@ -35,28 +35,29 @@ class KnowledgeForm(ModelForm):
 
 @login_required
 def my_skill_input(request, skill_id):
-    # TODO: fix this - apparently formset isn't exactly what I need
+    # TODO: fix this
     s = get_object_or_404(Skill, pk=skill_id)
+    for sub in s.subskill_set.all():
+        SubSkillKnowledge.objects.get_or_create(
+            employee=request.user, subskill=sub)
+    KnowledgeFormSet = modelformset_factory(SubSkillKnowledge, \
+        max_num=s.subskill_set.count())
     if request.method == 'POST': # If the form has been submitted...
-        postfile = open('postfile.txt', 'w')
-        print >> postfile, request.POST
-        postfile.close()
-        form_list = [
-        KnowledgeForm(request.POST, instance = SubSkillKnowledge.objects.get(
-            employee=request.user, subskill=sub
-        )) for sub in s.subskill_set.all()
-        ]
-        if reduce((lambda x, y : x and y), [form.is_valid() for form in form_list]): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            for form in form_list:
-                form.save()
+        from settings import DEBUG
+        if DEBUG:
+            postfile = open('postfile.txt', 'w')
+            print >> postfile, request.POST
+            postfile.close()
+        data = dict(request.POST.items())
+        data['form-TOTAL_FORMS'] = s.subskill_set.count()
+        data['form-INITIAL_FORMS'] = s.subskill_set.count()
+        data['form-MAX_NUM_FORMS'] = s.subskill_set.count()
+        form_list = KnowledgeFormSet(data)
+        if form_list.is_valid():
+            form_list.save()
             return HttpResponseRedirect('/skills/my_skills/') # Redirect after POST
     else:
-        form_list = [
-        KnowledgeForm(instance = SubSkillKnowledge.objects.get_or_create(
-            employee=request.user, subskill=sub
-        )[0]) for sub in s.subskill_set.all()
-        ]
+        form_list = KnowledgeFormSet(queryset=SubSkillKnowledge.objects.filter(
+            employee=request.user))
     return render_to_response('skill_set/my_skill_input.html', {'skill': s, 'form_list': form_list}, \
         context_instance=RequestContext(request))
