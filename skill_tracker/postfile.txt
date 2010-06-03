@@ -1,0 +1,1 @@
+<QueryDict: {u'comment': [u'1234', u'asdf', u'zxcv'], u'knowledge_level': [u'2', u'2', u'0'], u'want': [u'on', u'on'], u'employee': [u'2', u'2', u'2'], u'subskill': [u'1', u'2', u'3'], u'csrfmiddlewaretoken': [u'32b1b80e5aa031da73e883f3f44b362b']}>
