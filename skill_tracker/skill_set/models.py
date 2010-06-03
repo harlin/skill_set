@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Skill(models.Model):
     name = models.CharField(max_length=200)
     # logo = models.ImageField(upload_to='skill_set/img/')
@@ -10,6 +11,7 @@ class Skill(models.Model):
     # homepage = models.URLField(verify_exists=True, max_length=200, blank=True)
     def __unicode__(self):
         return self.name
+
 
 class SubSkill(models.Model):
     parent_skill = models.ForeignKey(Skill)
@@ -22,6 +24,7 @@ class SubSkill(models.Model):
     def __unicode__(self):
         return self.name
 
+
 KNOWLEDGE_CHOICES = (
     ('0', "Don't know at all"),
     ('1', "Tried a few things"),
@@ -33,6 +36,7 @@ class SubSkillKnowledge(models.Model):
     employee = models.ForeignKey(User)
     subskill = models.ForeignKey(SubSkill)
     # TODO: Here be a key to the User entity. don't know how to use that yet
-    knowledge_level = models.CharField(max_length=1, choices=KNOWLEDGE_CHOICES, default='0')
+    knowledge_level = models.CharField(max_length=1, \
+        choices=KNOWLEDGE_CHOICES, default='0')
     want = models.BooleanField(default=False)
     comment = models.TextField(blank=True)
