@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 {% if skill_list %}
     <ul>
     {% for skill in skill_list %}
@@ -8,3 +12,4 @@
     <p>No skills are available.</p>
 {% endif %}
 
+{% endblock %}

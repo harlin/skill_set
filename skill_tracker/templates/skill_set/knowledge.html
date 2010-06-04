@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form action="/skills/knowledge/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    <input type="submit" value="Submit" />
+    {% if sub_list %}
+        <table border="1">
+            <tr>
+                <td>
+                    User/Skill
+                </td>
+                {% for sub in sub_list %}
+                    <td>
+                        {{ sub.name }}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% for user in user_list %}
+                <tr>
+                    <td>
+                        {{ user.username }}
+                    </td>
+                    {% for sub in sub_list %}
+                        <td>
+                            0
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>{{ text }}</p>
+    {% endif %}
+{% endblock %}
