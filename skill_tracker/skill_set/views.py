@@ -105,18 +105,20 @@ def knowledge(request):
                         context_instance=RequestContext(request))
             user_list = []
             for sub in sub_list:
+                # This probably should be refactored using list comprehension
                 for k in sub.subskillknowledge_set.all():
                     if k.knowledge_level != '0' or k.want:
                         user_list.append(k.employee)
             user_list = list(set(user_list))
-            data = [['0']]
+            knowledges_list = SubSkillKnowledge.objects.filter(
+                employee__in=user_list, subskill__in=sub_list)
             return render_to_response('skill_set/knowledge.html', \
                 {
                     'form': form, 
                     'text': 'Please select skill or subskill',
                     'user_list': user_list,
                     'sub_list': sub_list,
-                    'data': data }, \
+                    'knowledges_list': knowledges_list }, \
                     context_instance=RequestContext(request))
     else:
         form = SkillSelectorForm()

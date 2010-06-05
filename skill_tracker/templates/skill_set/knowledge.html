@@ -25,7 +25,13 @@
                     </td>
                     {% for sub in sub_list %}
                         <td>
-                            0
+                            {% for k in knowledges_list %}
+                                {% if k.employee == user %}
+                                    {% if k.subskill == sub %}
+                                        {{ k.knowledge_level }}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         </td>
                     {% endfor %}
                 </tr>
