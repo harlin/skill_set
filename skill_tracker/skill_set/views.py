@@ -40,13 +40,6 @@ def my_skill_input(request, skill_id):
     s = get_object_or_404(Skill, pk=skill_id)
     skill_list = Skill.objects.all()
 
-    # Create objects if they don't exist yet
-    # TODO: This looks like a bit hardcode AND it violates MVC
-    #       but for now i don't know how (or where) to do it better
-    for sub in s.subskill_set.all():
-        SubSkillKnowledge.objects.get_or_create(
-            employee=request.user, subskill=sub)
-
     # TODO: I should add a custom form argument here OR work on template
     KnowledgeFormSet = inlineformset_factory(User, SubSkillKnowledge, \
         extra=0, can_delete=False, fields=(

@@ -25,6 +25,8 @@ class SubSkill(models.Model):
         return self.name
 
 
+from django.contrib.auth.models import User
+
 KNOWLEDGE_CHOICES = (
     ('0', "Don't know at all"),
     ('1', "Tried a few things"),
@@ -40,3 +42,21 @@ class SubSkillKnowledge(models.Model):
         choices=KNOWLEDGE_CHOICES, default='0')
     want = models.BooleanField(default=False)
     comment = models.TextField(blank=True)
+
+from django.db.models.signals import post_save
+
+def create_knowledge_for_user(sender, instance, created, **kwargs):
+    if created:
+        for sub in SubSkill.objects.all():
+            SubSkillKnowledge.objects.create(employee=instance, subskill=sub)
+
+post_save.connect(create_knowledge_for_user, sender=User)
+
+def create_knowledge_for_subskill(sender, instance, created, **kwargs):
+    if created:
+        for user in User.objects.all():
+        # TODO: change this to work only on employee user group
+            SubSkillKnowledge.objects.create(employee=user, subskill=instance)
+
+post_save.connect(create_knowledge_for_subskill, sender=SubSkill)
+
