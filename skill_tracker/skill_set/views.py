@@ -78,10 +78,6 @@ def knowledge(request):
             sub_list = []
             if form.cleaned_data['subskill'] != '0':
                 from settings import DEBUG
-                if DEBUG:
-                    somefile = open("test.txt", 'w')
-                    print >> somefile, form.cleaned_data['subskill']
-                    somefile.close()
                 sub_list = [
                     get_object_or_404(
                         SubSkill, pk=form.cleaned_data['subskill']

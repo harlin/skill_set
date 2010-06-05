@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>{{ subskill.name }}</h1>
 <p>{{ subskill.description }}</p>
 
@@ -9,3 +13,4 @@
 {% endif %}
 <a href="/skills/{{ skill.id }}">Back to {{ skill.name }}</a>
 
+{% endblock %}
