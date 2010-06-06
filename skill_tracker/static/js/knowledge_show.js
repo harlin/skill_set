@@ -1,7 +1,3 @@
-$(document).ready(function(){
-    $("#skill").change(onSkillChange);
-    $("#subskill").change(onSubSkillChange);
-});
     function knowledgesJSONTreatment(json)
     {
                     var htmlData = "<table>";
@@ -50,7 +46,6 @@ $(document).ready(function(){
         if(selected.val() != 0)
         {
             $("#prompt").hide();
-            $("#skill").reset();
             $.post("/skills/knowledge/", {
                     subskill: selected.val()
                 },
@@ -60,4 +55,7 @@ $(document).ready(function(){
             );
         }
     }
-
+runOnLoad(function(){
+    $("#skill").change(onSkillChange);
+    $("#subskill").change(onSubSkillChange);
+});
