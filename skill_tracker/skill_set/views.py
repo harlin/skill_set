@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms import ModelForm
 from django.forms.models import modelformset_factory, inlineformset_factory
-from django import forms
+from django.utils import simplejson
 
 def skill_index(request):
     skill_list = Skill.objects.all()
@@ -55,33 +55,17 @@ def my_skill_input(request, skill_id):
         {'skill': s, 'formset': formset, 'skill_list': skill_list}, \
             context_instance=RequestContext(request))
 
-class SkillSelectorForm(forms.Form):
-    skill_list = [(0, 'Select Skill')]
-    skill_list.extend(
-        [(s.id, s.name) for  s in Skill.objects.all()]
-        )
-    subskill_list = [(0, 'Select Subskill')]
-    subskill_list.extend(
-        [(sub.id, sub.name) for sub in SubSkill.objects.all()]
-        )
-    skill = forms.ChoiceField(choices=skill_list, initial=0, required=False);
-    subskill = forms.ChoiceField(
-        choices=subskill_list, initial=0, required=False);
-
 @login_required
 def knowledge(request):
-    # skill_list = Skill.objects.all()
-    # subskill_list = SubSkill.objects.all()
+    skill_list = Skill.objects.all()
+    subskill_list = SubSkill.objects.all()
     if request.method == 'POST':
-        form = SkillSelectorForm(request.POST)
-        if form.is_valid():
+        if request.is_ajax():
             sub_list = []
+            user_list = []
+            knowledges_list = []
+            '''            
             if form.cleaned_data['subskill'] != '0':
-                from settings import DEBUG
-                if DEBUG:
-                    somefile = open("test.txt", 'w')
-                    print >> somefile, form.cleaned_data['subskill']
-                    somefile.close()
                 sub_list = [
                     get_object_or_404(
                         SubSkill, pk=form.cleaned_data['subskill']
@@ -105,18 +89,30 @@ def knowledge(request):
             user_list = list(set(user_list))
             knowledges_list = SubSkillKnowledge.objects.filter(
                 employee__in=user_list, subskill__in=sub_list)
+            '''
+            #TODO: Fix this
             return render_to_response('skill_set/knowledge.html', \
                 {
-                    'form': form, 
-                    'text': 'Please select skill or subskill',
+                    'text': 'there was a AJAX POST',
+                    'skill_list': skill_list,
+                    'subskill_list': subskill_list,
                     'user_list': user_list,
                     'sub_list': sub_list,
                     'knowledges_list': knowledges_list }, \
                     context_instance=RequestContext(request))
+        else:
+            return render_to_response('skill_set/knowledge.html', \
+                {
+                    'skill_list': skill_list,
+                    'subskill_list': subskill_list,
+                    'text': 'No ajax'}, \
+                    context_instance=RequestContext(request))
     else:
-        form = SkillSelectorForm()
         return render_to_response('skill_set/knowledge.html', \
-            {'form': form, 'text': 'Please select skill or subskill'}, \
+            {
+                'skill_list': skill_list,
+                'subskill_list': subskill_list,
+                'text': 'Please select skill or subskill'}, \
                 context_instance=RequestContext(request))
 
 # @login_required

@@ -1,11 +1,56 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#skill").change(onSkillChange);
+        $("#subskill").change(onSubSkillChange);
+    });
+    function onSkillChange(){
+        var selected = $("#skill option:selected");
+        $.post("/skills/knowledge/", {
+                skill: selected.text()
+            },
+            function(responseData) {
+                $("#output").html(responseData)
+            }
+        );
+    }
+    function onSubSkillChange(){
+        var selected = $("#subskill option:selected");    
+        var output = "";
+        if(selected.val() != 0){
+            output = "You Selected " + selected.text();
+        }
+        $("#output").html(output);
+    }
+    </script>
+{% endblock %}
+
 {% block content %}
 
-    <form action="/skills/knowledge/" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <select id = "skill">
+        <option value="0">
+            Select Skill
+        </option>
+        {% for skill in skill_list %}
+            <option value={{skill.id}}>
+                {{ skill.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select id = "subskill">
+        <option value="0">
+            Select SubSkill
+        </option>
+        {% for subskill in subskill_list %}
+            <option value={{subskill.id}}>
+                {{ subskill.name }}
+            </option>
+        {% endfor %}
+    </select>
+
     {% if sub_list %}
         <table border="1">
             <tr>
@@ -40,4 +85,5 @@
     {% else %}
         <p>{{ text }}</p>
     {% endif %}
+    <div id="output"></div>
 {% endblock %}
