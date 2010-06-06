@@ -6,23 +6,62 @@
         $("#skill").change(onSkillChange);
         $("#subskill").change(onSubSkillChange);
     });
+    function knowledgesJSONTreatment(json)
+    {
+                    var htmlData = "<table>";
+                    htmlData += "<tr>";
+                    htmlData += "<th>User/Skill</th>";
+                    for (i=0; i<json.data.skill_count; i++)
+                    {
+                        htmlData += "<th>";
+                        htmlData += json.data.skills[i].name;
+                        htmlData += "</th>";
+                    }
+                    htmlData += "</tr>";
+                    for (j=0; j<json.data.user_count; j++)
+                    {
+                        htmlData += "<tr>";
+                        htmlData += "<td>";
+                        htmlData += json.data.users[j].name;
+                        htmlData += "</td>";
+                        for (i=0; i<json.data.skill_count; i++)
+                        {
+                            htmlData += "<td>";
+                            htmlData += json.data.users[j].knowledges[i].level;
+                            htmlData += "</td>";
+                        }
+                        htmlData += "</tr>";
+                    }
+                    htmlData += "</table>";
+                    return htmlData;
+    }
     function onSkillChange(){
         var selected = $("#skill option:selected");
-        $.post("/skills/knowledge/", {
-                skill: selected.text()
-            },
-            function(responseData) {
-                $("#output").html(responseData)
-            }
-        );
+        if(selected.val() != 0)
+        {
+            $("#prompt").hide();
+            $.post("/skills/knowledge/", {
+                    skill: selected.val()
+                },
+                function(responseData) {
+                    $("#knowledges").html(knowledgesJSONTreatment(responseData));
+                }
+            );
+        }
     }
     function onSubSkillChange(){
         var selected = $("#subskill option:selected");    
-        var output = "";
-        if(selected.val() != 0){
-            output = "You Selected " + selected.text();
+        if(selected.val() != 0)
+        {
+            $("#prompt").hide();
+            $.post("/skills/knowledge/", {
+                    subskill: selected.val()
+                },
+                function(responseData) {
+                    $("#knowledges").html(knowledgesJSONTreatment(responseData));
+                }
+            );
         }
-        $("#output").html(output);
     }
     </script>
 {% endblock %}
@@ -51,39 +90,7 @@
         {% endfor %}
     </select>
 
-    {% if sub_list %}
-        <table border="1">
-            <tr>
-                <td>
-                    User/Skill
-                </td>
-                {% for sub in sub_list %}
-                    <td>
-                        {{ sub.name }}
-                    </td>
-                {% endfor %}
-            </tr>
-            {% for user in user_list %}
-                <tr>
-                    <td>
-                        {{ user.username }}
-                    </td>
-                    {% for sub in sub_list %}
-                        <td>
-                            {% for k in knowledges_list %}
-                                {% if k.employee == user %}
-                                    {% if k.subskill == sub %}
-                                        {{ k.knowledge_level }}
-                                    {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>{{ text }}</p>
-    {% endif %}
-    <div id="output"></div>
+    <div id="prompt">{{ text }}</div>
+
+    <div id="knowledges"></div>
 {% endblock %}

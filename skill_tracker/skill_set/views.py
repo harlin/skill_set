@@ -63,23 +63,25 @@ def knowledge(request):
         if request.is_ajax():
             sub_list = []
             user_list = []
-            knowledges_list = []
-            '''            
-            if form.cleaned_data['subskill'] != '0':
+            # knowledges_list = []
+            # data = request.POST
+            if request.POST.has_key('subskill'):
+                s_name = request.POST['subskill']
                 sub_list = [
                     get_object_or_404(
-                        SubSkill, pk=form.cleaned_data['subskill']
+                        SubSkill, pk=s_name[0]
                         )
                     ]
-            elif form.cleaned_data['skill'] != '0':
+            elif request.POST.has_key('skill'):
+                s_name = request.POST['skill']
                 s = get_object_or_404(
-                        Skill, pk=form.cleaned_data['skill']
+                        Skill, pk=s_name[0]
                         )
                 sub_list = s.subskill_set.all()
-            if not sub_list:
-                return render_to_response('skill_set/knowledge.html', \
-                    {'form': form, 'text': 'Please select skill or subskill'}, \
-                        context_instance=RequestContext(request))
+            # if not sub_list:
+            #     return render_to_response('skill_set/knowledge.html', \
+            #         {'text': 'Please select skill or subskill'}, \
+            #             context_instance=RequestContext(request))
             user_list = []
             for sub in sub_list:
                 # This probably should be refactored using list comprehension
@@ -87,19 +89,25 @@ def knowledge(request):
                     if k.knowledge_level != '0' or k.want:
                         user_list.append(k.employee)
             user_list = list(set(user_list))
-            knowledges_list = SubSkillKnowledge.objects.filter(
-                employee__in=user_list, subskill__in=sub_list)
-            '''
+            # knowledges_list = SubSkillKnowledge.objects.filter(
+            #     employee__in=user_list, subskill__in=sub_list)
+            data = {}
+            data['skill_count'] = len(sub_list)
+            data['user_count'] = len(user_list)
+            data['skills'] = [{'id': sub.id, 'name': sub.name} for sub in sub_list]
+            data['users'] = [{
+                'id': user.id, 
+                'name': user.username,
+                'knowledges': [{
+                    'id': sub.id, 
+                    'level': SubSkillKnowledge.objects.get(
+                        employee=user, subskill=sub
+                        ).knowledge_level
+                    } for sub in sub_list]
+                } for user in user_list]
             #TODO: Fix this
-            return render_to_response('skill_set/knowledge.html', \
-                {
-                    'text': 'there was a AJAX POST',
-                    'skill_list': skill_list,
-                    'subskill_list': subskill_list,
-                    'user_list': user_list,
-                    'sub_list': sub_list,
-                    'knowledges_list': knowledges_list }, \
-                    context_instance=RequestContext(request))
+            return HttpResponse(simplejson.dumps({'data': data}), \
+                mimetype="application/json")
         else:
             return render_to_response('skill_set/knowledge.html', \
                 {
