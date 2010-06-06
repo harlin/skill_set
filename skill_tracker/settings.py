@@ -1,4 +1,6 @@
 # Django settings for skill_tracker project.
+import os.path
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -8,6 +10,8 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
@@ -77,8 +81,21 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'skill_tracker.urls'
 
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+
+
+# Absolute path to the directory that holds media.
+# Example: "/home/media/media.lawrence.com/"
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+# URL that handles the media served from MEDIA_ROOT.
+# Example: "http://media.lawrence.com"
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+
 TEMPLATE_DIRS = (
-    '/home/elija/test/skill_set/skill_tracker/templates'
+    os.path.join(PROJECT_ROOT, 'templates')
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

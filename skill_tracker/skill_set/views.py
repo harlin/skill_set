@@ -63,8 +63,6 @@ def knowledge(request):
         if request.is_ajax():
             sub_list = []
             user_list = []
-            # knowledges_list = []
-            # data = request.POST
             if request.POST.has_key('subskill'):
                 s_name = request.POST['subskill']
                 sub_list = [
@@ -89,8 +87,6 @@ def knowledge(request):
                     if k.knowledge_level != '0' or k.want:
                         user_list.append(k.employee)
             user_list = list(set(user_list))
-            # knowledges_list = SubSkillKnowledge.objects.filter(
-            #     employee__in=user_list, subskill__in=sub_list)
             data = {}
             data['skill_count'] = len(sub_list)
             data['user_count'] = len(user_list)
@@ -105,7 +101,6 @@ def knowledge(request):
                         ).knowledge_level
                     } for sub in sub_list]
                 } for user in user_list]
-            #TODO: Fix this
             return HttpResponse(simplejson.dumps({'data': data}), \
                 mimetype="application/json")
         else:
