@@ -1,16 +1,43 @@
 {% extends "base.html" %}
 
-{% block content %}
-{% if skill_list %}
-    <ul>
-    {% for skill in skill_list %}
-        <li><a href="/skills/my_skills/{{ skill.id }}/">{{ skill.name }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No skills are available.</p>
-{% endif %}
-</form>
+{% block scripts %}
+    <script type="text/javascript" src="/static/js/runonload.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("#accordion").accordion();
+        });
+    </script>
 
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+<div class="demo">
+<div id="accordion">
+    {% for skill in skill_list %}
+        <h3><a href="#"> {{ skill.name }} </a></h3>
+        <div>
+            {% for sub in subskill_list %}
+                {% if sub.parent_skill = skill %}
+                    <p>
+                    <b>{{ sub.name }}</b>
+                    <select id="knowledge" skill_name="{{ sub.name }}">
+                        {% for level in levels %}
+                            <option value={{level.id}}>
+                                {{ level.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+</div>
 
 {% endblock %}

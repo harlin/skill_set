@@ -1,4 +1,4 @@
-from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge
+from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge, KNOWLEDGE_CHOICES
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
@@ -27,8 +27,10 @@ def subskill_detail(request, skill_id, subskill_id):
 @login_required
 def my_skills(request):
     skill_list = Skill.objects.all()
+    subskill_list = SubSkill.objects.all()
+    levels = [ {'id': ch[0], 'name': ch[1]} for ch in KNOWLEDGE_CHOICES ]
     return render_to_response('skill_set/my_skills.html', \
-        {'skill_list': skill_list})
+        {'skill_list': skill_list, 'subskill_list': subskill_list, 'levels': levels})
 
 
 # class KnowledgeForm(ModelForm):
