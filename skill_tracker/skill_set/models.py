@@ -37,7 +37,6 @@ KNOWLEDGE_CHOICES = (
 class SubSkillKnowledge(models.Model):
     employee = models.ForeignKey(User)
     subskill = models.ForeignKey(SubSkill)
-    # TODO: Here be a key to the User entity. don't know how to use that yet
     knowledge_level = models.CharField(max_length=1, \
         choices=KNOWLEDGE_CHOICES, default='0')
     want = models.BooleanField(default=False)
