@@ -27,10 +27,17 @@
         {{ formset.management_form }}
     <div class="demo">
     <div id="accordion">
-        {% for form in formset.forms %}
-            <h3><a href="#"> Text </a></h3>
+        {% for skill in skill_list %}
+            <h3><a href="#"> {{ skill.name }} </a></h3>
             <div>
-                {{ form.as_p }}
+            {% for form in formset.forms %}
+                {% if form.instance.subskill.parent_skill == skill %}
+                <label> {{ form.instance.subskill.name }} </label>
+                <div>
+                    {{ form.as_p }}
+                </div>
+                {% endif %}
+            {% endfor %}
             </div>
         {% endfor %}
     </div>

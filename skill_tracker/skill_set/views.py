@@ -1,11 +1,10 @@
-from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge, KNOWLEDGE_CHOICES
+from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.template import Context, loader, RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 # from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from django.forms import ModelForm
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.utils import simplejson
 
@@ -27,12 +26,12 @@ def subskill_detail(request, skill_id, subskill_id):
 @login_required
 def my_skills(request):
     skill_list = Skill.objects.all()
-    subskill_list = SubSkill.objects.all()
+    # subskill_list = SubSkill.objects.all()
     # levels = [ {'id': ch[0], 'name': ch[1]} for ch in KNOWLEDGE_CHOICES ]
 
     KnowledgeFormSet = inlineformset_factory(User, SubSkillKnowledge, \
         extra=0, can_delete=False, fields=(
-            'subskill', 'knowledge_level', 'want', 'comment'))
+            'knowledge_level', 'want', 'comment'))
 
     if request.method == 'POST':
         formset = KnowledgeFormSet(request.POST, instance=request.user)
@@ -43,7 +42,7 @@ def my_skills(request):
     else:
         formset = KnowledgeFormSet(instance=request.user)
     return render_to_response('skill_set/my_skills.html', \
-        {'formset': formset, 'skill_list': skill_list, 'subskill_list': subskill_list}, \
+        {'formset': formset, 'skill_list': skill_list}, \
             context_instance=RequestContext(request))
 
 
@@ -91,7 +90,10 @@ def knowledge(request):
                     'id': sub.id, 
                     'level': SubSkillKnowledge.objects.get(
                         employee=user, subskill=sub
-                        ).knowledge_level
+                        ).knowledge_level,
+                    'want': SubSkillKnowledge.objects.get(
+                        employee=user, subskill=sub
+                        ).want
                     } for sub in sub_list]
                 } for user in user_list]
             return HttpResponse(simplejson.dumps({'data': data}), \
