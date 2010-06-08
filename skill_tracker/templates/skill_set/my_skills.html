@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block scripts %}
+
     <script type="text/javascript" src="/static/js/runonload.js"></script>
     <script type="text/javascript" src="/static/js/jquery.form.js"></script>     
     <script type="text/javascript">
@@ -19,36 +20,21 @@
 
 {% endblock %}
 
-
-
-
-
 {% block content %}
 
     <form id="knowledges" action="/skills/my_skills/" method="post">
         {% csrf_token %}
         {{ formset.management_form }}
+    <div class="demo">
+    <div id="accordion">
         {% for form in formset.forms %}
-            {{ form.as_p }}
+            <h3><a href="#"> Text </a></h3>
+            <div>
+                {{ form.as_p }}
+            </div>
         {% endfor %}
+    </div>
+    </div>
     <input type="submit" value="Submit" />
-
-
-<div class="demo">
-<div id="accordion">
-    {% for skill in skill_list %}
-        <h3><a href="#"> {{ skill.name }} </a></h3>
-        <div>
-            {% for sub in subskill_list %}
-                {% if sub.parent_skill = skill %}
-                    <p>
-                    <b>{{ sub.name }}</b>
-                    </p>
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endfor %}
-</div>
-</div>
 
 {% endblock %}
