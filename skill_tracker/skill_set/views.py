@@ -28,34 +28,25 @@ def subskill_detail(request, skill_id, subskill_id):
 def my_skills(request):
     skill_list = Skill.objects.all()
     subskill_list = SubSkill.objects.all()
-    levels = [ {'id': ch[0], 'name': ch[1]} for ch in KNOWLEDGE_CHOICES ]
-    return render_to_response('skill_set/my_skills.html', \
-        {'skill_list': skill_list, 'subskill_list': subskill_list, 'levels': levels})
+    # levels = [ {'id': ch[0], 'name': ch[1]} for ch in KNOWLEDGE_CHOICES ]
 
-
-# class KnowledgeForm(ModelForm):
-#     class Meta:
-#         model = SubSkillKnowledge
-
-@login_required
-def my_skill_input(request, skill_id):
-    s = get_object_or_404(Skill, pk=skill_id)
-    skill_list = Skill.objects.all()
-
-    # TODO: I should add a custom form argument here OR work on template
     KnowledgeFormSet = inlineformset_factory(User, SubSkillKnowledge, \
         extra=0, can_delete=False, fields=(
             'subskill', 'knowledge_level', 'want', 'comment'))
+
     if request.method == 'POST':
         formset = KnowledgeFormSet(request.POST, instance=request.user)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect('/skills/my_skills/')
+            if not request.is_ajax():
+                return HttpResponseRedirect('/skills/my_skills/')
     else:
         formset = KnowledgeFormSet(instance=request.user)
-    return render_to_response('skill_set/my_skill_input.html', \
-        {'skill': s, 'formset': formset, 'skill_list': skill_list}, \
+    return render_to_response('skill_set/my_skills.html', \
+        {'formset': formset, 'skill_list': skill_list, 'subskill_list': subskill_list}, \
             context_instance=RequestContext(request))
+
+
 
 @login_required
 def knowledge(request):
