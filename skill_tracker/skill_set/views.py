@@ -8,20 +8,24 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.utils import simplejson
 
+
 def skill_index(request):
     skill_list = Skill.objects.all()
     return render_to_response('skill_set/index.html', \
         {'skill_list': skill_list})
 
+
 def skill_detail(request, skill_id):
     s = get_object_or_404(Skill, pk=skill_id)
     return render_to_response('skill_set/skill_detail.html', {'skill': s})
+
 
 def subskill_detail(request, skill_id, subskill_id):
     s = get_object_or_404(Skill, pk=skill_id)
     sub = get_object_or_404(SubSkill, pk=subskill_id)
     return render_to_response('skill_set/subskill_detail.html', \
         {'skill': s, 'subskill': sub})
+
 
 @login_required
 def my_skills(request):
@@ -46,7 +50,6 @@ def my_skills(request):
             context_instance=RequestContext(request))
 
 
-
 @login_required
 def knowledge(request):
     skill_list = Skill.objects.all()
@@ -55,18 +58,15 @@ def knowledge(request):
         if request.is_ajax():
             sub_list = []
             user_list = []
-            if request.POST.has_key('subskill'):
+            if 'subskill' in request.POST:
                 s_name = request.POST['subskill']
                 sub_list = [
                     get_object_or_404(
-                        SubSkill, pk=s_name[0]
-                        )
-                    ]
-            elif request.POST.has_key('skill'):
+                        SubSkill, pk=s_name[0])]
+            elif 'skill' in request.POST:
                 s_name = request.POST['skill']
                 s = get_object_or_404(
-                        Skill, pk=s_name[0]
-                        )
+                        Skill, pk=s_name[0])
                 sub_list = s.subskill_set.all()
             # if not sub_list:
             #     return render_to_response('skill_set/knowledge.html', \
@@ -82,20 +82,19 @@ def knowledge(request):
             data = {}
             data['skill_count'] = len(sub_list)
             data['user_count'] = len(user_list)
-            data['skills'] = [{'id': sub.id, 'name': sub.name} for sub in sub_list]
+            data['skills'] = [
+                {'id': sub.id, 'name': sub.name} for sub in sub_list]
             data['users'] = [{
-                'id': user.id, 
+                'id': user.id,
                 'name': user.username,
                 'knowledges': [{
-                    'id': sub.id, 
+                    'id': sub.id,
                     'level': SubSkillKnowledge.objects.get(
-                        employee=user, subskill=sub
-                        ).knowledge_level,
+                        employee=user, subskill=sub).knowledge_level,
                     'want': SubSkillKnowledge.objects.get(
-                        employee=user, subskill=sub
-                        ).want
-                    } for sub in sub_list]
-                } for user in user_list]
+                        employee=user, subskill=sub).want} \
+                    for sub in sub_list]} \
+                for user in user_list]
             return HttpResponse(simplejson.dumps({'data': data}), \
                 mimetype="application/json")
         else:
@@ -112,15 +111,3 @@ def knowledge(request):
                 'subskill_list': subskill_list,
                 'text': 'Please select skill or subskill'}, \
                 context_instance=RequestContext(request))
-
-# @login_required
-# def knowledge_of_skill(request, skill_id):
-#     s = get_object_or_404(Skill, pk=skill_id)
-#     return render_to_response('skill_set/knowledge_of_skill.html', {'skill': s})
-
-# @login_required
-# def knowledge_of_subskill(request, skill_id, subskill_id):
-#     s = get_object_or_404(Skill, pk=skill_id)
-#     sub = get_object_or_404(SubSkill, pk=subskill_id)
-#     return render_to_response('skill_set/knowledge_of_subskill.html', \
-#         {'skill': s, 'subskill': sub})
