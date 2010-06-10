@@ -68,18 +68,16 @@ def knowledge(request):
                 s = get_object_or_404(
                         Skill, pk=s_name[0])
                 sub_list = s.subskill_set.all()
-            # if not sub_list:
-            #     return render_to_response('skill_set/knowledge.html', \
-            #         {'text': 'Please select skill or subskill'}, \
-            #             context_instance=RequestContext(request))
             user_list = []
             for sub in sub_list:
                 # This probably should be refactored using list comprehension
+                # but i think i will lose a lot in readability
                 for k in sub.subskillknowledge_set.all():
                     if k.knowledge_level != '0' or k.want:
                         user_list.append(k.employee)
             user_list = list(set(user_list))
             data = {}
+            # Again, for the sake of readability i'm using a series of data[x]=
             data['skill_count'] = len(sub_list)
             data['user_count'] = len(user_list)
             data['skills'] = [

@@ -3,6 +3,7 @@ function onSkillChange(){
     if(selected.val() != 0)
     {
         $("#prompt").hide();
+        $("#subskill").val(0);
         $.post("/skills/knowledge/", {
                 skill: selected.val()
             },
@@ -19,6 +20,7 @@ function onSubSkillChange(){
     if(selected.val() != 0)
     {
         $("#prompt").hide();
+        $("#skill").val(0);
         $.post("/skills/knowledge/", {
                 subskill: selected.val()
             },
