@@ -1,41 +1,3 @@
-function knowledgesJSONTreatment(json)
-{
-                var htmlData = "<table>";
-                htmlData += "<tr>";
-                htmlData += "<th>User/Skill</th>";
-                for (i=0; i<json.data.skill_count; i++)
-                {
-                    htmlData += "<th>";
-                    htmlData += json.data.skills[i].name;
-                    htmlData += "</th>";
-                }
-                htmlData += "</tr>";
-                for (j=0; j<json.data.user_count; j++)
-                {
-                    htmlData += "<tr>";
-                    htmlData += "<td>";
-                    htmlData += json.data.users[j].name;
-                    htmlData += "</td>";
-                    for (i=0; i<json.data.skill_count; i++)
-                    {
-                        htmlData += "<td>";
-                        if(json.data.users[j].knowledges[i].want)
-                        {
-                            htmlData += "<b>";
-                        }
-                        htmlData += json.data.users[j].knowledges[i].level;
-                        if(json.data.users[j].knowledges[i].want)
-                        {
-                            htmlData += "</b>";
-                        }
-                        htmlData += "</td>";
-                    }
-                    htmlData += "</tr>";
-                }
-                htmlData += "</table>";
-                return htmlData;
-}
-
 function onSkillChange(){
     var selected = $("#skill option:selected");
     if(selected.val() != 0)
@@ -45,7 +7,8 @@ function onSkillChange(){
                 skill: selected.val()
             },
             function(responseData) {
-                $("#knowledges").html(knowledgesJSONTreatment(responseData));
+                $("#knowledges").setTemplateURL("/static/js/knowledge_table.tpl");
+                $("#knowledges").processTemplate(responseData);
             }
         );
     }
@@ -60,7 +23,8 @@ function onSubSkillChange(){
                 subskill: selected.val()
             },
             function(responseData) {
-                $("#knowledges").html(knowledgesJSONTreatment(responseData));
+                $("#knowledges").setTemplateURL("/static/js/knowledge_table.tpl");
+                $("#knowledges").processTemplate(responseData);
             }
         );
     }
