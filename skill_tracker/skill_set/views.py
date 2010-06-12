@@ -93,6 +93,8 @@ def knowledge(request):
                         employee=user, subskill=sub).want} \
                     for sub in sub_list]} \
                 for user in user_list]
+            if len(sub_list):
+                data['parent_skill'] = sub_list[0].parent_skill.id
             return HttpResponse(simplejson.dumps({'data': data}), \
                 mimetype="application/json")
         else:

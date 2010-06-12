@@ -7,6 +7,9 @@ class Skill(models.Model):
     # logo = models.ImageField(upload_to='skill_set/img/')
     # TODO: learn more about images later. looks like PIL is needed here
     description = models.TextField()
+    wiki_en_link = models.URLField(
+        verify_exists=True, max_length=200, blank=True)
+    homepage = models.URLField(verify_exists=True, max_length=200, blank=True)
 
     def __unicode__(self):
         return self.name

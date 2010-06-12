@@ -3,7 +3,11 @@
 		<tr>
 		    <td> Skills/Users </td>
 		    {#for index = 1 to $T.data.skill_count}
-    			<td> {$T.data.skills[$T.index - 1].name} </td>
+    			<td> 
+    			    <a href="/skills/{$T.data.parent_skill}/{$T.data.skills[$T.index - 1].id}"> 
+    			    {$T.data.skills[$T.index - 1].name} 
+    			    </a>
+    			</td>
 			{#/for}
 		</tr>
 	</thead>
