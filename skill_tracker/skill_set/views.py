@@ -1,7 +1,7 @@
 from skill_tracker.skill_set.models import Skill, SubSkill, SubSkillKnowledge
 from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.template import Context, loader, RequestContext
+from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 # from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -30,8 +30,6 @@ def subskill_detail(request, skill_id, subskill_id):
 @login_required
 def my_skills(request):
     skill_list = Skill.objects.all()
-    # subskill_list = SubSkill.objects.all()
-    # levels = [ {'id': ch[0], 'name': ch[1]} for ch in KNOWLEDGE_CHOICES ]
 
     KnowledgeFormSet = inlineformset_factory(User, SubSkillKnowledge, \
         extra=0, can_delete=False, fields=(
@@ -57,17 +55,17 @@ def knowledge(request):
     if request.method == 'POST':
         if request.is_ajax():
             sub_list = []
-            user_list = []
             if 'subskill' in request.POST:
                 s_name = request.POST['subskill']
+                parent = get_object_or_404(SubSkill, pk=s_name[0]).parent_skill
                 sub_list = [
                     get_object_or_404(
                         SubSkill, pk=s_name[0])]
             elif 'skill' in request.POST:
                 s_name = request.POST['skill']
-                s = get_object_or_404(
+                parent = get_object_or_404(
                         Skill, pk=s_name[0])
-                sub_list = s.subskill_set.all()
+                sub_list = parent.subskill_set.all()
             user_list = []
             for sub in sub_list:
                 # This probably should be refactored using list comprehension
@@ -76,25 +74,26 @@ def knowledge(request):
                     if k.knowledge_level != '0' or k.want:
                         user_list.append(k.employee)
             user_list = list(set(user_list))
-            data = {}
-            # Again, for the sake of readability i'm using a series of data[x]=
-            data['skill_count'] = len(sub_list)
-            data['user_count'] = len(user_list)
-            data['skills'] = [
-                {'id': sub.id, 'name': sub.name} for sub in sub_list]
-            data['users'] = [{
-                'id': user.id,
-                'name': user.username,
-                'knowledges': [{
-                    'id': sub.id,
-                    'level': SubSkillKnowledge.objects.get(
-                        employee=user, subskill=sub).knowledge_level,
-                    'want': SubSkillKnowledge.objects.get(
-                        employee=user, subskill=sub).want} \
-                    for sub in sub_list]} \
-                for user in user_list]
-            if len(sub_list):
-                data['parent_skill'] = sub_list[0].parent_skill.id
+            data = {
+                'skill_count': len(sub_list),
+                'user_count': len(user_list),
+                'skills':[{'id': sub.id, 'name': sub.name} for sub in sub_list],
+                'users': [
+                    {
+                    'id': user.id,
+                    'name': user.username,
+                    'knowledges': [{
+                        'id': sub.id,
+                        'level': SubSkillKnowledge.objects.get(
+                            employee=user, subskill=sub).knowledge_level,
+                        'want': SubSkillKnowledge.objects.get(
+                            employee=user, subskill=sub).want} \
+                        for sub in sub_list]
+                    } \
+                    for user in user_list],
+                'parent_skill': parent.id
+                }
+
             return HttpResponse(simplejson.dumps({'data': data}), \
                 mimetype="application/json")
         else:
