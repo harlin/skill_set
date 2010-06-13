@@ -10,6 +10,11 @@ function onSkillChange(){
             function(responseData) {
                 $("#knowledges").setTemplateURL("/static/js/knowledge_table.tpl");
                 $("#knowledges").processTemplate(responseData);
+                $("#knowledges table tbody tr td button").button({
+                    icons: {
+                        primary: 'ui-icon-info'}, 
+                    text: false
+                    })
             }
         );
     }
@@ -27,6 +32,11 @@ function onSubSkillChange(){
             function(responseData) {
                 $("#knowledges").setTemplateURL("/static/js/knowledge_table.tpl");
                 $("#knowledges").processTemplate(responseData);
+                $("#knowledges table tbody tr td button").button({
+                    icons: {
+                        primary: 'ui-icon-info'}, 
+                    text: false
+                    })
             }
         );
     }

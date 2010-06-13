@@ -24,6 +24,9 @@
 	    	        {#if $T.data.users[$T.u - 1].knowledges[$T.s - 1].want }
 	    	            </b>
 	    	        {#/if}
+	    	        {#if $T.data.users[$T.u - 1].knowledges[$T.s - 1].comment != "" }
+	    	        <button>{$T.data.users[$T.u - 1].knowledges[$T.s - 1].comment}</button>
+	    	        {#/if}
 		        </td>
 			{#/for}
 	    </tr>

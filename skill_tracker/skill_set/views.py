@@ -87,7 +87,9 @@ def knowledge(request):
                         'level': SubSkillKnowledge.objects.get(
                             employee=user, subskill=sub).knowledge_level,
                         'want': SubSkillKnowledge.objects.get(
-                            employee=user, subskill=sub).want} \
+                            employee=user, subskill=sub).want,
+                        'comment': SubSkillKnowledge.objects.get(
+                            employee=user, subskill=sub).comment} \
                         for sub in sub_list]
                     } \
                     for user in user_list],

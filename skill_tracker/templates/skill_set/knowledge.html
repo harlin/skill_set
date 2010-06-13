@@ -4,6 +4,26 @@
     <script type="text/javascript" src="/static/js/jquery-jtemplates.js"></script>
     <script type="text/javascript" src="/static/js/runonload.js"></script>
     <script type="text/javascript" src="/static/js/knowledge_show.js"></script>
+
+	<script type="text/javascript">
+	// increase the default animation speed to exaggerate the effect
+	$.fx.speeds._default = 1000;
+	$(function() {
+		$('#dialog').dialog({
+			autoOpen: false,
+			show: 'blind',
+			hide: 'explode'
+		});
+		
+		$('#opener').click(function() {
+			$('#dinner').html('something');
+			$('#dialog').dialog('open');
+			return false;
+		});
+	});
+	</script>
+
+
 {% endblock %}
 
 {% block content %}
@@ -31,6 +51,6 @@
     </select>
 
     <div id="prompt">{{ text }}</div>
-
+    
     <div id="knowledges"></div>
 {% endblock %}
