@@ -3,7 +3,8 @@
 {% block content %}
 
 <h1>{{ subskill.name }}</h1>
-<p>{{ subskill.description }}</p>
+<img src="/media/{{ subskill.logo }}" />
+<p>  {{ subskill.description }} </p>
 
 {% if subskill.homepage %}
     <a href="{{ subskill.homepage }}">Homepage</p>

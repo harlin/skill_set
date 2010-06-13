@@ -18,7 +18,7 @@ class Skill(models.Model):
 class SubSkill(models.Model):
     parent_skill = models.ForeignKey(Skill)
     name = models.CharField(max_length=200)
-    # logo = models.ImageField(upload_to='skill_set/img/')
+    logo = models.ImageField(upload_to='img', blank=True)
     # TODO: learn more about images later. looks like PIL is needed here
     description = models.TextField()
     wiki_en_link = models.URLField(
