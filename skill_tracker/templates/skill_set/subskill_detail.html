@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load i18n %}
 
 <h1>{{ subskill.name }}</h1>
 <img src="/media/{{ subskill.logo }}" />
 <p>  {{ subskill.description }} </p>
 
 {% if subskill.homepage %}
-    <a href="{{ subskill.homepage }}">Homepage</p>
+    <p><a href="{{ subskill.homepage }}">{% trans "Homepage" %}</p>
 {% endif %}
 {% if subskill.wiki_en_link %}
-    <a href="{{ subskill.wiki_en_link }}">Wikipedia(English)</p>
+    <p><a href="{{ subskill.wiki_en_link }}">{% trans "Wikipedia(English)" %}</p>
 {% endif %}
-<a href="/skills/{{ skill.id }}">Back to {{ skill.name }}</a>
+<p><a href="/skills/{{ skill.id }}">{% trans "Back to" %} {{ skill.name }}</a></p>
 
 {% endblock %}

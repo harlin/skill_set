@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.utils import simplejson
+from django.utils.translation import ugettext as _
 
 
 def skill_index(request):
@@ -103,12 +104,12 @@ def knowledge(request):
                 {
                     'skill_list': skill_list,
                     'subskill_list': subskill_list,
-                    'text': 'No ajax'}, \
+                    'text': _('Unexpected non-AJAX request')}, \
                     context_instance=RequestContext(request))
     else:
         return render_to_response('skill_set/knowledge.html', \
             {
                 'skill_list': skill_list,
                 'subskill_list': subskill_list,
-                'text': 'Please select skill or subskill'}, \
+                'text': _('Please select skill or subskill')}, \
                 context_instance=RequestContext(request))

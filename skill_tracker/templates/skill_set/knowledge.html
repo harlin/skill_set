@@ -27,7 +27,10 @@
 {% endblock %}
 
 {% block content %}
+{% load i18n %}
 
+    <div>
+    {% trans "Select skill category" %}
     <select id = "skill">
         <option value="0">
             Select Skill
@@ -38,7 +41,10 @@
             </option>
         {% endfor %}
     </select>
+    </div>
 
+    <div>
+    {% trans "Select particular skill" %}
     <select id = "subskill">
         <option value="0">
             Select SubSkill
@@ -49,6 +55,7 @@
             </option>
         {% endfor %}
     </select>
+    </div>
 
     <div id="prompt">{{ text }}</div>
     

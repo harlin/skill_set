@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 
 class Skill(models.Model):
@@ -32,10 +33,10 @@ class SubSkill(models.Model):
 from django.contrib.auth.models import User
 
 KNOWLEDGE_CHOICES = (
-    ('0', "Don't know at all"),
-    ('1', "Tried a few things"),
-    ('2', "Had a project"),
-    ('3', "Mastered"),
+    ('0', _("Don't know at all")),
+    ('1', _("Tried a few things")),
+    ('2', _("Had a project")),
+    ('3', _("Mastered")),
 )
 
 

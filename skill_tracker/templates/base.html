@@ -8,16 +8,17 @@
     <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery-ui-1.8.2.custom.min.js"></script>
     {% block scripts %} {% endblock %}
+    {% load i18n %}
 </head>
 
 <body>
     <div id="sidebar">
         {% block sidebar %}
         <ul>
-            <li><a href="/skills/knowledge/">Knowledge Base</a></li>
-            <li><a href="/skills/">Skill List</a></li>
-            <li><a href="/skills/my_skills/">My Skills</a></li>
-            <li><a href="/accounts/logout/">Logout</a></li>
+            <li><a href="/skills/knowledge/">{% trans "Knowledge Base" %}</a></li>
+            <li><a href="/skills/">{% trans "Skill List" %}</a></li>
+            <li><a href="/skills/my_skills/">{% trans "My Skills" %}</a></li>
+            <li><a href="/accounts/logout/">{% trans "Log Out" %}</a></li>
         </ul>
         {% endblock %}
     </div>
